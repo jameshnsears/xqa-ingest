@@ -116,13 +116,13 @@ class Ingester(MessagingHandler):
                               body=self._contents_of_file(self._xml_files[self._sent_count]).encode('utf-8'))
 
             logging.info(
-                '%s,%3s: %9s: creation_time=%14s; correlation_id=%s; address=%s - sha256=%s; %s',
+                '%s,%3s: %9s - {"creation_time":"%14s", "address":"%s", "correlation_id":"%s", "sha256":"%s", "file":"%s"}',
                 '>',
                 1 + self._sent_count,
                 sys.getsizeof(message.body),
                 message.creation_time,
-                message.correlation_id,
                 message.address,
+                message.correlation_id,
                 hashlib.sha256(message.body).hexdigest(),
                 self._xml_files[self._sent_count])
 
