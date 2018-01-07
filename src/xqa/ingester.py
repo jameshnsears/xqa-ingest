@@ -113,18 +113,19 @@ class Ingester(MessagingHandler):
                               correlation_id=str(uuid4()),
                               creation_time=(datetime.datetime.now() - datetime.datetime(1970, 1, 1)).total_seconds(),
                               durable=True,
-                              body=self._contents_of_file(self._xml_files[self._sent_count]).encode('utf-8'))
+                              body=self._contents_of_file(self._xml_files[self._sent_count]).encode('utf-8'),
+                              subject=os.path.abspath(self._xml_files[self._sent_count]))
 
             logging.info(
-                '%s,%3s: %9s - {"creation_time":"%14s", "address":"%s", "correlation_id":"%s", "sha256":"%s", "file":"%s"}',
+                '%s,%3s: %9s - {"creation_time":"%14s", "address":"%s", "correlation_id":"%s", "subject":"%s", "sha256":"%s"}',
                 '>',
                 1 + self._sent_count,
                 sys.getsizeof(message.body),
                 message.creation_time,
                 message.address,
                 message.correlation_id,
-                hashlib.sha256(message.body).hexdigest(),
-                self._xml_files[self._sent_count])
+                message.subject,
+                hashlib.sha256(message.body).hexdigest())
 
             event.sender.send(message)
             self._sent_count += 1
