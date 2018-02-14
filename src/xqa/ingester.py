@@ -49,7 +49,7 @@ class Ingester(MessagingHandler):
         if not xml_files:
             logging.warning(Ingester.ERROR_NO_XML_FILES_FOUND)
             logging.info('EXIT')
-            exit(-1)
+            raise Ingester.IngestException(Ingester.ERROR_NO_XML_FILES_FOUND)
 
         return sorted(xml_files)
 
@@ -143,5 +143,5 @@ if __name__ == '__main__':
 
     try:
         Container(Ingester(args.path)).run()
-    except (ConnectionException, KeyboardInterrupt):
+    except (ConnectionException, Ingester.IngestException, KeyboardInterrupt):
         exit(-1)

@@ -36,5 +36,4 @@ script:
 after_success:
   - cd coverage
   - coverage combine
-  - codecov --token=98e1e4b3-b943-4009-9e90-371b0ac5237d
   - COVERALLS_REPO_TOKEN=umsIY7d4uf3Ay5aeMisTKDmrCpAM3Svu8 coveralls
