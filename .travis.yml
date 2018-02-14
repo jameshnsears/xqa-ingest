@@ -12,17 +12,16 @@ python:
   - "3.5"
   - "3.6"
 
-before_install:
+before_script:
+  - docker network create xqa
+
   - docker volume create xqa-message-broker
   - docker pull jameshnsears/xqa-message-broker
-  - docker run -d --net="host" --name="xqa-message-broker" -p 127.0.0.1:5672:5672 jameshnsears/xqa-message-broker
-  - sleep 10
-  - docker logs xqa-message-broker
+  - docker run -d --net="xqa" --name="xqa-message-broker" -p 5672:5672 jameshnsears/xqa-message-broker
 
   - sudo apt-get remove cmake
   - sudo apt-get install -y gcc cmake-curses-gui uuid-dev libssl-dev libsasl2-2 libsasl2-dev swig python-dev python3-dev ruby-dev libperl-dev
 
-  - pwd
   - pip install -r requirements.txt
 
 script:
@@ -31,9 +30,10 @@ script:
   - mkdir coverage
   - mv .coverage coverage/.coverage.0
 
-after_success:
   - pytest --flake8 --cov-report term-missing --cov=. test
   - mv .coverage coverage/.coverage.1
+
+after_success:
   - cd coverage
   - coverage combine
   - codecov --token=98e1e4b3-b943-4009-9e90-371b0ac5237d
