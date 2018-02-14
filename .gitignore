@@ -4,5 +4,5 @@ coverage/
 .idea/
 __pycache__/
 .pydevproject
-.pytest_cache
+.pytest_cache/
 .vscode/
