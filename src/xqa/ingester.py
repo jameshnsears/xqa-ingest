@@ -7,6 +7,7 @@ import os
 import sys
 from uuid import uuid4
 
+import psycopg2
 from lxml import etree
 from lxml.etree import XMLSyntaxError
 from proton import ConnectionException, Message
@@ -139,9 +140,19 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-p', '--path', required=True,
                         help='path to folder containing xml files')
+    parser.add_argument('-url_amqp', '--url_amqp', required=False,
+                        help='override url_amqp for container DNS - i.e. amqp://admin:admin@xqa-message-broker:5672/')
+    parser.add_argument('-storage_host', '--storage_host', required=False,
+                        help='override storage_host for container DNS - i.e. xqa-db')
     args = parser.parse_args()
+
+    if args.url_amqp:
+        configuration.url_amqp = args.url_amqp
+    if args.storage_host:
+        configuration.storage_host = args.storage_host
 
     try:
         Container(Ingester(args.path)).run()
-    except (ConnectionException, Ingester.IngestException, KeyboardInterrupt):
+    except (psycopg2.OperationalError, ConnectionException, Ingester.IngestException, KeyboardInterrupt):
+        logging.error(exception)
         exit(-1)
