@@ -5,6 +5,7 @@ import logging
 import mimetypes
 import os
 import sys
+import time
 from uuid import uuid4
 
 import psycopg2
@@ -18,7 +19,9 @@ from xqa.commons import configuration
 
 
 class Ingester(MessagingHandler):
+
     class IngestException(Exception):
+
         def __init__(self, message=None):
             if message:
                 self.message = message
@@ -29,8 +32,15 @@ class Ingester(MessagingHandler):
 
     def __init__(self, path_to_xml_candidate_files):
         MessagingHandler.__init__(self)
-        logging.info(self.__class__.__name__)
         self._stopping = False
+        self._service_id = str(uuid4()).split('-')[0]
+
+        logging.info('%s - %s' % (self.__class__.__name__, self._service_id))
+        logging.debug('-p=%s' % configuration.path_to_xml_files)
+        logging.debug('-message_broker_host=%s' % configuration.message_broker_host)
+
+        time.sleep(5)
+
         self._path_to_xml_candidate_files = path_to_xml_candidate_files
         self._xml_files = self._find_xml_files()
         self._sent_count = 0
@@ -92,7 +102,10 @@ class Ingester(MessagingHandler):
             return f.read()
 
     def on_start(self, event):
-        connection = event.container.connect(configuration.url_amqp)
+        connection = 'amqp://%s:%s@%s:%s/' % (configuration.message_broker_user,
+                                              configuration.message_broker_password,
+                                              configuration.message_broker_host,
+                                              configuration.message_broker_port)
         self.ingest_sender = event.container.create_sender(connection, configuration.queue_ingest)
 
     def on_accepted(self, event):
@@ -138,21 +151,17 @@ class Ingester(MessagingHandler):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-p', '--path', required=True,
-                        help='path to folder containing xml files')
-    parser.add_argument('-url_amqp', '--url_amqp', required=False,
-                        help='override url_amqp for container DNS - i.e. amqp://admin:admin@xqa-message-broker:5672/')
-    parser.add_argument('-storage_host', '--storage_host', required=False,
-                        help='override storage_host for container DNS - i.e. xqa-db')
+    parser.add_argument('-p', '--path', required=False,
+                        help='i.e. /opt/xqa-ingest/xml')
+    parser.add_argument('-message_broker_host', '--message_broker_host', required=True,
+                        help='i.e. dev_xqa-message-broker_1')
     args = parser.parse_args()
-
-    if args.url_amqp:
-        configuration.url_amqp = args.url_amqp
-    if args.storage_host:
-        configuration.storage_host = args.storage_host
+    if args.path:
+        configuration.path_to_xml_files = args.path
+    configuration.message_broker_host = args.message_broker_host
 
     try:
-        Container(Ingester(args.path)).run()
-    except (psycopg2.OperationalError, ConnectionException, Ingester.IngestException, KeyboardInterrupt):
+        Container(Ingester(configuration.path_to_xml_files)).run()
+    except (psycopg2.OperationalError, ConnectionException, Ingester.IngestException, KeyboardInterrupt) as exception:
         logging.error(exception)
         exit(-1)

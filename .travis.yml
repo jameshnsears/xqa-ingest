@@ -26,7 +26,7 @@ before_script:
 
 script:
   - export PYTHONPATH=/home/travis/build/jameshnsears/xqa-ingest/src:$PYTHONPATH
-  - coverage run --omit */site-packages/*,*/virtualenv/* src/xqa/ingester.py -p test/resources/test-data/good
+  - coverage run --omit */site-packages/*,*/virtualenv/* src/xqa/ingester.py -p test/resources/test-data/good -message_broker_host xqa-message-broker
   - mkdir coverage
   - mv .coverage coverage/.coverage.0
 

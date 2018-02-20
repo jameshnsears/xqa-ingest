@@ -2,13 +2,20 @@ import logging
 import socket
 import sys
 
-url_amqp = 'amqp://admin:admin@%s:5672/' % socket.gethostbyname(socket.gethostname())
+path_to_xml_files = '/opt/xqa-ingest/xml'
+
+message_broker_host = socket.gethostbyname(socket.gethostname())
+message_broker_port = 5672
+message_broker_user = 'admin'
+message_broker_password = 'admin'
+message_broker_queue_db_amqp_insert = 'queue://xqa.db.amqp.insert'
+message_broker_topic_cmd_stop = 'topic://xqa.cmd.stop'
 
 queue_ingest = 'queue://xqa.ingest'
 
 topic_cmd_stop = 'topic://xqa.cmd.stop'
 
-storage_host = '127.0.0.1'
+storage_host = socket.gethostbyname(socket.gethostname())
 storage_port = 5432
 storage_user = 'xqa'
 storage_password = 'xqa'

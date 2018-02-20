@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  xqa-message-broker:
+    image: jameshnsears/xqa-message-broker:latest
+    ports:
+      - "5672:5672"
+      - "8161:8161"
+    volumes:
+      - "xqa-message-broker:/opt/apache-activemq-5.15.3/data"
+    networks:
+      - xqa
+
+  xqa-ingester:
+    build: .
+    command: ["-message_broker_host", "dev_xqa-message-broker_1"]
+    networks:
+      - xqa
+    depends_on:
+      - xqa-message-broker
+
+volumes:
+  xqa-message-broker:
+
+networks:
+  xqa:
