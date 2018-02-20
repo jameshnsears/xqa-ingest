@@ -7,8 +7,8 @@
 ## 2. Bring up
 * docker-compose -p "dev" up -d xqa-message-broker
 * chmod 777 $HOME/GIT_REPOS/xqa-test-data/*.xml
-* docker run -d --net="dev_xqa" --name="dev_xqa-ingester_1" -v $HOME/GIT_REPOS/xqa-test-data:/opt/xqa-ingest/xml dev_xqa-ingester -message_broker_host dev_xqa-message-broker_1
-* docker logs -f dev_xqa-ingester_1
+* docker run -d --net="dev_xqa" --name="dev_xqa-ingest_1" -v $HOME/GIT_REPOS/xqa-test-data:/opt/xqa-ingest/xml dev_xqa-ingest -message_broker_host dev_xqa-message-broker_1
+* docker logs -f dev_xqa-ingest_1
 
 ## 3. Test
 * see .travis.yml
