@@ -151,10 +151,10 @@ class Ingester(MessagingHandler):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-p', '--path', required=False,
-                        help='i.e. /opt/xqa-ingest/xml')
     parser.add_argument('-message_broker_host', '--message_broker_host', required=True,
-                        help='i.e. dev_xqa-message-broker_1')
+                        help='i.e. xqa-message-broker')
+    parser.add_argument('-p', '--path', required=False,
+                        help='i.e. /xml')
     args = parser.parse_args()
     if args.path:
         configuration.path_to_xml_files = args.path

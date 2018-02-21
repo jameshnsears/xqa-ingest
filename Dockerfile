@@ -17,14 +17,14 @@ ARG XQA=xqa-ingest
 ARG XML=xml
 
 RUN mkdir ${OPTDIR}/${XQA}
-RUN mkdir ${OPTDIR}/${XQA}/${XML}
+RUN mkdir ${XML}
 COPY src ${OPTDIR}/${XQA}
 ADD requirements.txt ${OPTDIR}/${XQA}
 
 RUN apt-get -qq install -y python3-pip gcc cmake-curses-gui uuid-dev libssl-dev libsasl2-2 libsasl2-dev swig python-dev python3-dev ruby-dev libperl-dev
 
 RUN useradd -r -M -d ${OPTDIR}${XQA} xqa
-RUN chown -R xqa:xqa ${OPTDIR}${XQA}
+RUN chown -R xqa:xqa ${OPTDIR}${XQA} ${XML}
 
 USER xqa
 
@@ -35,4 +35,3 @@ RUN pip3 install -r requirements.txt
 ENV PYTHONPATH=${OPTDIR}/${XQA}
 
 ENTRYPOINT ["python3", "xqa/ingester.py"]
-CMD ["-message_broker_host 127.0.0.1"]

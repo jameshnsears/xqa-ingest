@@ -13,7 +13,8 @@ services:
 
   xqa-ingest:
     build: .
-    command: ["-message_broker_host", "dev_xqa-message-broker_1"]
+    image: "xqa-ingest"
+    command: ["-message_broker_host", "xqa-message-broker", "-p", "$HOME/GIT_REPOS/xqa-test-data"]
     networks:
       - xqa
     depends_on:

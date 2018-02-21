@@ -2,7 +2,7 @@ import logging
 import socket
 import sys
 
-path_to_xml_files = '/opt/xqa-ingest/xml'
+path_to_xml_files = '/xml'
 
 message_broker_host = socket.gethostbyname(socket.gethostname())
 message_broker_port = 5672
@@ -22,5 +22,5 @@ storage_password = 'xqa'
 storage_database_name = 'xqa'
 
 logging.basicConfig(stream=sys.stdout,
-                    level=logging.INFO,
+                    level=logging.DEBUG,
                     format="%(asctime)s  %(levelname)8s --- [%(threadName)20s]: %(funcName)25s, %(lineno)3s: %(message)s")
