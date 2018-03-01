@@ -14,7 +14,7 @@ RUN dpkg-reconfigure --frontend noninteractive locales
 
 ARG OPTDIR=/opt/
 ARG XQA=xqa-ingest
-ARG XML=xml
+ARG XML=/xml
 
 RUN mkdir ${OPTDIR}/${XQA}
 RUN mkdir ${XML}

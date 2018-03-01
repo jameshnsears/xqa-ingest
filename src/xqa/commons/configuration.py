@@ -8,12 +8,8 @@ message_broker_host = socket.gethostbyname(socket.gethostname())
 message_broker_port = 5672
 message_broker_user = 'admin'
 message_broker_password = 'admin'
-message_broker_queue_db_amqp_insert = 'queue://xqa.db.amqp.insert'
-message_broker_topic_cmd_stop = 'topic://xqa.cmd.stop'
-
-queue_ingest = 'queue://xqa.ingest'
-
-topic_cmd_stop = 'topic://xqa.cmd.stop'
+message_broker_queue_ingest = 'queue://xqa.ingest'
+message_broker_queue_db_amqp_insert_event = 'queue://xqa.db.amqp.insert_event'
 
 storage_host = socket.gethostbyname(socket.gethostname())
 storage_port = 5432

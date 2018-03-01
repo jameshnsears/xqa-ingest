@@ -2,126 +2,113 @@ import argparse
 import datetime
 import hashlib
 import logging
-import mimetypes
 import os
-import sys
-import time
 from uuid import uuid4
 
-import psycopg2
-from lxml import etree
-from lxml.etree import XMLSyntaxError
+import sys
 from proton import ConnectionException, Message
 from proton.handlers import MessagingHandler
 from proton.reactor import Container
 
 from xqa.commons import configuration
+from xqa.commons.xml_file_finder import XmlFileFinder
 
 
 class Ingester(MessagingHandler):
-
-    class IngestException(Exception):
-
-        def __init__(self, message=None):
-            if message:
-                self.message = message
-
-    ERROR_NO_XML_FILES_FOUND = 'no XML files found'
-    ERROR_FILE_MIMETYPE = 'incorrect mimetype'
-    ERROR_FILE_CONTENTS_NOT_WELL_FORMED = 'file not well-formed'
-
-    def __init__(self, path_to_xml_candidate_files):
+    def __init__(self, xml_files):
         MessagingHandler.__init__(self)
-        self._stopping = False
         self._service_id = str(uuid4()).split('-')[0]
 
         logging.info('%s - %s' % (self.__class__.__name__, self._service_id))
         logging.debug('-p=%s' % configuration.path_to_xml_files)
         logging.debug('-message_broker_host=%s' % configuration.message_broker_host)
 
-        time.sleep(5)
+        self._populate_messages_to_send_list(xml_files)
 
-        self._path_to_xml_candidate_files = path_to_xml_candidate_files
-        self._xml_files = self._find_xml_files()
-        self._sent_count = 0
-
-    def _find_xml_files(self):
-        xml_files = []
-
-        for root, _, filenames in os.walk(self._path_to_xml_candidate_files):
-            for filename in filenames:
-                path_to_filename = self._full_path_to_file(root, filename)
-                try:
-                    if self._can_file_be_used(path_to_filename, filename):
-                        xml_files.append(path_to_filename)
-                except Ingester.IngestException:
-                    pass
-
-        if not xml_files:
-            logging.warning(Ingester.ERROR_NO_XML_FILES_FOUND)
-            logging.info('EXIT')
-            raise Ingester.IngestException(Ingester.ERROR_NO_XML_FILES_FOUND)
-
-        return sorted(xml_files)
-
-    def _rm_bom_from_file_contents(self, path_to_filename):
-        file_contents = open(path_to_filename, mode='r', encoding='utf-8-sig').read()
-        open(path_to_filename, mode='w', encoding='utf-8').write(file_contents)
-
-    def _full_path_to_file(self, root, filename):
-        return os.path.join(root, filename)
-
-    def _can_file_be_used(self, path_to_filename, filename):
-        if not self._check_file_mimetype_recognised(path_to_filename):
-            logging.debug('N: %s: %s' % (Ingester.ERROR_FILE_MIMETYPE, filename))
-            raise Ingester.IngestException(Ingester.ERROR_FILE_MIMETYPE)
-
-        if not self._check_file_contents_well_formed(path_to_filename):
-            logging.debug('N: %s: %s' % (Ingester.ERROR_FILE_CONTENTS_NOT_WELL_FORMED, filename))
-            raise Ingester.IngestException(Ingester.ERROR_FILE_CONTENTS_NOT_WELL_FORMED)
-
-        self._rm_bom_from_file_contents(path_to_filename)
-
-        logging.debug('Y: %s' % path_to_filename)
-        return True
-
-    def _check_file_contents_well_formed(self, path_to_filename):
-        try:
-            etree.parse(path_to_filename)
-            return True
-        except XMLSyntaxError:
-            return False
-
-    def _check_file_mimetype_recognised(self, path_to_filename):
-        if mimetypes.guess_type(path_to_filename) in [('application/xml', None), ('text/xml', None)]:
-            return True
-        return False
-
-    def _contents_of_file(self, xml_file):
-        with open(xml_file) as f:
-            return f.read()
+    @staticmethod
+    def now_timestamp_seconds():
+        return (datetime.datetime.now() - datetime.datetime(1970, 1, 1)).total_seconds()
 
     def on_start(self, event):
         connection = 'amqp://%s:%s@%s:%s/' % (configuration.message_broker_user,
                                               configuration.message_broker_password,
                                               configuration.message_broker_host,
                                               configuration.message_broker_port)
-        self.ingest_sender = event.container.create_sender(connection, configuration.queue_ingest)
+
+        self.ingester_sender = event.container.create_sender(connection, configuration.message_broker_queue_ingest)
+
+        self.insert_event_sender = event.container.create_sender(connection,
+                                                                 configuration.message_broker_queue_db_amqp_insert_event)
+
+    # def _send_files(self):
+    #     for i, xml_file in enumerate(self._xml_files):
+    #         message = Message(address=configuration.message_broker_queue_ingest,
+    #                           correlation_id=str(uuid4()),
+    #                           creation_time=Ingester.now_timestamp_seconds(),
+    #                           durable=True,
+    #                           body=self._xml_file_finder.contents_of_file(xml_file).encode('utf-8'),
+    #                           subject=os.path.abspath(xml_file))
+    #
+    #         message_size = sys.getsizeof(message.body)
+    #         logging.info(
+    #             '%s,%3s: %9s - creation_time=%14s; address=%s; correlation_id=%s; subject=%s; sha256=%s',
+    #             '>',
+    #             i,
+    #             message_size,
+    #             message.creation_time,
+    #             message.address,
+    #             message.correlation_id,
+    #             message.subject,
+    #             hashlib.sha256(message.body).hexdigest())
+    #
+    #         self._insert_event(message, message_size, "START.send")
+    #         self.ingester_sender.send(message)
+    #         self._insert_event(message, message_size, "END.send")
+
+    # def _insert_event(self, message, message_size, state):
+    #     creation_time = Ingester.now_timestamp_seconds()
+    #
+    #     insert_event = """{ "service_id": "%s", "creation_time": %s, "address": "%s", "correlation_id": "%s", "subject": "%s", "digest": "%s", "message_size": %s", "event": "%s" }""" % \
+    #                    ('%s - %s' % (self.__class__.__name__, self._service_id),
+    #                     creation_time,
+    #                     message.address,
+    #                     message.correlation_id,
+    #                     message.subject,
+    #                     hashlib.sha256(message.body).hexdigest(),
+    #                     message_size,
+    #                     state)
+    #
+    #     self.insert_event_sender.send(Message(address=configuration.message_broker_queue_db_amqp_insert_event,
+    #                                           correlation_id=str(uuid4()),
+    #                                           creation_time=creation_time,
+    #                                           durable=True,
+    #                                           body=insert_event.encode('utf-8')))
 
     def on_accepted(self, event):
-        if self._sent_count == len(self._xml_files):
+        if self._finished:
             event.connection.close()
 
     def on_connection_closed(self, event):
-        logging.info('EXIT')
+        logging.info('EXIT - on_connection_closed')
+        event.connection.close()
 
     def on_disconnected(self, event):
-        logging.warning('retry')
-        self._sent_count -= 1
+        logging.info('EXIT - on_disconnected')
+        event.connection.close()
 
     def on_sendable(self, event):
-        while event.sender.credit and self._sent_count < len(self._xml_files):
+        """
+https://qpid.apache.org/releases/qpid-proton-0.20.0/proton/python/examples/simple_send.py.html
+        """
+        while event.sender.credit and self.messages_to_send:
             logging.debug('credit=%d' % event.sender.credit)
+
+            if self.xml_file_list:
+                ## place START message on self.messages_to_send
+                # send message
+                ## place END message on self.messages_to_send
+                # remove from list
+
 
             message = Message(address=configuration.queue_ingest,
                               correlation_id=str(uuid4()),
@@ -161,7 +148,8 @@ if __name__ == '__main__':
     configuration.message_broker_host = args.message_broker_host
 
     try:
-        Container(Ingester(configuration.path_to_xml_files)).run()
-    except (psycopg2.OperationalError, ConnectionException, Ingester.IngestException, KeyboardInterrupt) as exception:
+        xml_file_finder = XmlFileFinder(configuration.path_to_xml_files)
+        Container(Ingester(xml_file_finder.find_files())).run()
+    except (XmlFileFinder.FinderException, ConnectionException, KeyboardInterrupt) as exception:
         logging.error(exception)
         exit(-1)
