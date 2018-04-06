@@ -1,8 +1,9 @@
 package xqa.integration;
 
 import org.junit.jupiter.api.Test;
-import xqa.Ingest;
+import xqa.ingest.Ingest;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class IngestTest {
@@ -13,21 +14,22 @@ class IngestTest {
     @Test
     void ingestTestData() throws Exception {
         Ingest ingest = new Ingest();
-        ingest.ingestFiles(new String[]{"-message_broker_host", "127.0.0.1", "-path", getResource()});
+        ingest.processCommandLine(new String[]{"-message_broker_host", "127.0.0.1", "-path", getResource()});
+        assertEquals(3, ingest.ingestFiles());
     }
 
     @Test
-    void ingestShowUsage() throws Exception {
+    void ingestShowUsage() {
         assertThrows(Ingest.CommandLineException.class,
                 () -> {
                     Ingest ingest = new Ingest();
-                    ingest.ingestFiles(new String[]{"-message_broker_host", "127.0.0.1"});
+                    ingest.processCommandLine(new String[]{"-message_broker_host", "127.0.0.1"});
                 });
 
         assertThrows(Ingest.CommandLineException.class,
                 () -> {
                     Ingest ingest = new Ingest();
-                    ingest.ingestFiles(new String[]{"-path", getResource()});
+                    ingest.processCommandLine(new String[]{"-path", getResource()});
                 });
     }
 }

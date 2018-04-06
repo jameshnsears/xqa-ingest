@@ -1,15 +1,15 @@
-package xqa.commons;
+package xqa.ingest;
 
 import java.util.Date;
 
-public class IngestEvent {
-    private String serviceId;
-    private long creationTime;
-    private String correlationId;
-    private String source;
-    private String digest;
-    private int size;
-    private String state;
+class IngestEvent {
+    private final String serviceId;
+    private final long creationTime;
+    private final String correlationId;
+    private final String source;
+    private final String digest;
+    private final int size;
+    private final String state;
 
     public IngestEvent(final String serviceId,
                        final String correlationId,

@@ -5,7 +5,7 @@ import org.junit.Rule;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.migrationsupport.rules.EnableRuleMigrationSupport;
 import org.junit.rules.TemporaryFolder;
-import xqa.commons.XmlFileFinder;
+import xqa.ingest.XmlFileFinder;
 
 import java.io.File;
 import java.net.URL;
@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @EnableRuleMigrationSupport
 public class XmlFileFinderTest {
     @Rule
-    public TemporaryFolder temporaryFolder = new TemporaryFolder();
+    public final TemporaryFolder temporaryFolder = new TemporaryFolder();
 
     private URL getResource(final String resourceName) {
         return Thread.currentThread().getContextClassLoader().getResource(resourceName);

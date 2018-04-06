@@ -11,7 +11,7 @@
 <listEntry value="org.eclipse.debug.ui.launchGroup.run"/>
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.m2e.launchconfig.classpathProvider"/>
-<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="xqa.Ingest"/>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="xqa.ingest.Ingest"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-message_broker_host 127.0.0.1&#10;-path /home/jsears/GIT_REPOS/xqa-test-data"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="xqa-ingest"/>
 <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.m2e.launchconfig.sourcepathProvider"/>

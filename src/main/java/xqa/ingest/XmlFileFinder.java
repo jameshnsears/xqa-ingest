@@ -1,4 +1,4 @@
-package xqa.commons;
+package xqa.ingest;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -19,6 +19,7 @@ public class XmlFileFinder {
     public static final String ERROR_NO_XML_FILES_FOUND = "no XML files found";
     public static final String ERROR_FILE_MIMETYPE = "incorrect mimetype";
     public static final String ERROR_FILE_CONTENTS_NOT_WELL_FORMED = "file not well-formed";
+
     private static final Logger logger = LoggerFactory.getLogger(XmlFileFinder.class);
     private String pathToXmlCandidateFiles;
 
@@ -65,7 +66,7 @@ public class XmlFileFinder {
     }
 
     public void checkFileCanBeUsed(File candidateXmlFile) throws Exception {
-        if (checkFileMimeTypeRecognised(candidateXmlFile) == false) {
+        if (!checkFileMimeTypeRecognised(candidateXmlFile)) {
             logger.warn(
                     MessageFormat.format("N: {0}: {1}", XmlFileFinder.ERROR_FILE_MIMETYPE, candidateXmlFile.getPath()));
             throw new FinderException(XmlFileFinder.ERROR_FILE_MIMETYPE);
@@ -102,9 +103,7 @@ public class XmlFileFinder {
         String mimeType = Files.probeContentType(Paths.get(candidateXmlFile.getPath()));
         logger.debug(mimeType);
 
-        if (mimeType != null && (mimeType.equals("application/xml") || mimeType.equals("text/xml")))
-            return true;
-        return false;
+        return mimeType != null && (mimeType.equals("application/xml") || mimeType.equals("text/xml"));
     }
 
     public String contentsOfFile(File xmlFile) throws Exception {
@@ -113,7 +112,7 @@ public class XmlFileFinder {
 
     @SuppressWarnings("serial")
     public class FinderException extends Exception {
-        public FinderException(String message) {
+        FinderException(String message) {
             super(message);
         }
     }
