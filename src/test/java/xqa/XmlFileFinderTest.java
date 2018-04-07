@@ -29,7 +29,7 @@ public class XmlFileFinderTest {
     @Test
     void findXmlFilesInPath() throws Exception {
         XmlFileFinder xmlFileFinder = new XmlFileFinder(getResource("test-data").getPath());
-        assertEquals(xmlFileFinder.findFiles().size(), 4);
+        assertEquals(xmlFileFinder.findFiles().size(), 3);
     }
 
     @Test
@@ -98,7 +98,7 @@ public class XmlFileFinderTest {
         assertThrows(XmlFileFinder.FinderException.class,
                 () -> {
                     XmlFileFinder xmlFileFinder = new XmlFileFinder();
-                    xmlFileFinder.checkFileCanBeUsed(new File(getResource("test-data/bad/mime_type.xml").getPath()));
+                    xmlFileFinder.checkFileCanBeUsed(new File(getResource("test-data/bad/mime_type.txt").getPath()));
                 });
     }
 

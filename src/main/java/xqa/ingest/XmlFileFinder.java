@@ -103,7 +103,7 @@ public class XmlFileFinder {
         String mimeType = Files.probeContentType(Paths.get(candidateXmlFile.getPath()));
         logger.debug(mimeType);
 
-        return mimeType != null && (mimeType.equals("application/xml") || mimeType.equals("text/xml"));
+        return (mimeType.equals("application/xml") || mimeType.equals("text/xml"));
     }
 
     public String contentsOfFile(File xmlFile) throws Exception {

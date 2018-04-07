@@ -27,7 +27,7 @@ public class Ingest {
     private String messageBrokerPassword;
     private int messageBrokerRetryAttempts;
 
-    private String destinationInsert;
+    private String destinationIngest;
     private String destinationEvent;
 
     private String pathToXmlCandidateFiles;
@@ -110,7 +110,7 @@ public class Ingest {
         options.addOption("message_broker_password", true, "i.e. admin");
         options.addOption("message_broker_retry", true, "i.e. 3");
 
-        options.addOption("destination_insert", true, "i.e. xqa.insert");
+        options.addOption("destination_ingest", true, "i.e. xqa.ingest");
         options.addOption("destination_event", true, "i.e. xqa.event");
 
         options.addOption("path", true, "i.e. /xml");
@@ -132,7 +132,7 @@ public class Ingest {
         messageBrokerPassword = commandLine.getOptionValue("message_broker_password", "admin");
         messageBrokerRetryAttempts = Integer.parseInt(commandLine.getOptionValue("message_broker_retry", "3"));
 
-        destinationInsert = commandLine.getOptionValue("destination_insert", "xqa.insert");
+        destinationIngest = commandLine.getOptionValue("destination_ingest", "xqa.ingest");
         destinationEvent = commandLine.getOptionValue("destination_event", "xqa.event");
 
         if (commandLine.hasOption("path")) {
@@ -162,7 +162,7 @@ public class Ingest {
     private void sendXmlToMessageBroker(String correlationId, final String path, final String xml) throws Exception {
         Message message = MessageMaker.createMessageWithSubject(
                 messageBroker.getSession(),
-                destinationInsert,
+                destinationIngest,
                 correlationId,
                 path,
                 xml);
