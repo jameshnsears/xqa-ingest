@@ -13,7 +13,7 @@ class IngestTest {
 
     @Test
     void ingestMain() throws Exception {
-        assertEquals(3, Ingest.main((new String[]{"-message_broker_host", "127.0.0.1", "-path", getResource()})));
+        assertEquals(2, Ingest.main((new String[]{"-message_broker_host", "127.0.0.1", "-path", getResource()})));
     }
 
     @Test

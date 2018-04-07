@@ -8,8 +8,12 @@ import org.junit.rules.TemporaryFolder;
 import xqa.ingest.XmlFileFinder;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Paths;
+import java.util.zip.GZIPInputStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,14 +29,19 @@ public class XmlFileFinderTest {
     @Test
     void findXmlFilesInPath() throws Exception {
         XmlFileFinder xmlFileFinder = new XmlFileFinder(getResource("test-data").getPath());
-        assertEquals(xmlFileFinder.findFiles().size(), 5);
+        assertEquals(xmlFileFinder.findFiles().size(), 4);
     }
 
     @Test
     void rmBomFromFile() throws Exception {
         FileUtils.copyFileToDirectory(
-                new File(getResource("test-data/bad/bom/with_bom.xml").getFile()),
+                new File(getResource("test-data/bad/bom/with_bom.xml.gz").getFile()),
                 temporaryFolder.getRoot());
+
+        // preserves BOM
+        decompressGzipFile(
+                temporaryFolder.getRoot().getPath().concat("/with_bom.xml.gz"),
+                temporaryFolder.getRoot().getPath().concat("/with_bom.xml"));
 
         XmlFileFinder xmlFileFinder = new XmlFileFinder(temporaryFolder.getRoot().getPath());
         for (File candidateXmlfile : xmlFileFinder.findFiles())
@@ -41,6 +50,21 @@ public class XmlFileFinderTest {
         assertTrue(FileUtils.contentEquals(
                 Paths.get(temporaryFolder.getRoot().toString(), "with_bom.xml").toFile(),
                 new File(getResource("test-data/bad/bom/without_bom.xml").getFile())));
+    }
+
+    private void decompressGzipFile(String gzipFile, String newFile) throws IOException {
+        FileInputStream fileInputStream = new FileInputStream(gzipFile);
+        GZIPInputStream gzipInputStream = new GZIPInputStream(fileInputStream);
+        FileOutputStream fileOutputStream = new FileOutputStream(newFile);
+
+        byte[] buffer = new byte[1024];
+        int len;
+        while ((len = gzipInputStream.read(buffer)) != -1) {
+            fileOutputStream.write(buffer, 0, len);
+        }
+
+        fileOutputStream.close();
+        gzipInputStream.close();
     }
 
     @Test
