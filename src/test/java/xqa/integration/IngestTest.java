@@ -12,24 +12,20 @@ class IngestTest {
     }
 
     @Test
-    void ingestTestData() throws Exception {
-        Ingest ingest = new Ingest();
-        ingest.processCommandLine(new String[]{"-message_broker_host", "127.0.0.1", "-path", getResource()});
-        assertEquals(3, ingest.ingestFiles());
+    void ingestMain() throws Exception {
+        assertEquals(3, Ingest.main((new String[]{"-message_broker_host", "127.0.0.1", "-path", getResource()})));
     }
 
     @Test
     void ingestShowUsage() {
         assertThrows(Ingest.CommandLineException.class,
                 () -> {
-                    Ingest ingest = new Ingest();
-                    ingest.processCommandLine(new String[]{"-message_broker_host", "127.0.0.1"});
+                    Ingest.main(new String[]{"-message_broker_host", "127.0.0.1"});
                 });
 
         assertThrows(Ingest.CommandLineException.class,
                 () -> {
-                    Ingest ingest = new Ingest();
-                    ingest.processCommandLine(new String[]{"-path", getResource()});
+                    Ingest.main(new String[]{"-path", getResource()});
                 });
     }
 }

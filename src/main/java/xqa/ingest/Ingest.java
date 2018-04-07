@@ -27,8 +27,8 @@ public class Ingest {
     private String messageBrokerPassword;
     private int messageBrokerRetryAttempts;
 
-    private String insertDestination;
-    private String auditDestination;
+    private String destinationInsert;
+    private String destinationEvent;
 
     private String pathToXmlCandidateFiles;
 
@@ -37,17 +37,16 @@ public class Ingest {
         logger.info(serviceId);
     }
 
-    public static void main(String[] args) {
+    public static int main(String[] args) throws Exception {
         Signal.handle(new Signal("INT"), signal -> System.exit(1));
 
         try {
             Ingest ingest = new Ingest();
             ingest.processCommandLine(args);
-            ingest.ingestFiles();
+            return ingest.ingestFiles();
         } catch (Exception exception) {
             logger.error(exception.getMessage());
-            exception.printStackTrace();
-            System.exit(1);
+            throw exception;
         }
     }
 
@@ -111,8 +110,8 @@ public class Ingest {
         options.addOption("message_broker_password", true, "i.e. admin");
         options.addOption("message_broker_retry", true, "i.e. 3");
 
-        options.addOption("insert_destination", true, "i.e. xqa.insert");
-        options.addOption("audit_destination", true, "i.e. xqa.db.amqp.insert_event");
+        options.addOption("destination_insert", true, "i.e. xqa.insert");
+        options.addOption("destination_event", true, "i.e. xqa.event");
 
         options.addOption("path", true, "i.e. /xml");
 
@@ -133,8 +132,8 @@ public class Ingest {
         messageBrokerPassword = commandLine.getOptionValue("message_broker_password", "admin");
         messageBrokerRetryAttempts = Integer.parseInt(commandLine.getOptionValue("message_broker_retry", "3"));
 
-        insertDestination = commandLine.getOptionValue("xquery_destination", "xqa.shard.xquery");
-        auditDestination = commandLine.getOptionValue("audit_destination", "xqa.db.amqp.insert_event");
+        destinationInsert = commandLine.getOptionValue("destination_insert", "xqa.insert");
+        destinationEvent = commandLine.getOptionValue("destination_event", "xqa.event");
 
         if (commandLine.hasOption("path")) {
             pathToXmlCandidateFiles = commandLine.getOptionValue("path");
@@ -153,7 +152,7 @@ public class Ingest {
     private void sendEventToMessageBroker(final IngestEvent ingestEvent) throws Exception {
         Message message = MessageMaker.createMessage(
                 messageBroker.getSession(),
-                auditDestination,
+                destinationEvent,
                 UUID.randomUUID().toString(),
                 new Gson().toJson(ingestEvent));
 
@@ -163,7 +162,7 @@ public class Ingest {
     private void sendXmlToMessageBroker(String correlationId, final String path, final String xml) throws Exception {
         Message message = MessageMaker.createMessageWithSubject(
                 messageBroker.getSession(),
-                insertDestination,
+                destinationInsert,
                 correlationId,
                 path,
                 xml);
