@@ -37,9 +37,12 @@ public class Ingest {
         logger.info(serviceId);
     }
 
-    public static int main(String[] args) throws Exception {
+    public static void main(String[] args) throws Exception {
         Signal.handle(new Signal("INT"), signal -> System.exit(1));
+        executeIngest(args);
+    }
 
+    public static int executeIngest(String[] args) throws Exception {
         try {
             Ingest ingest = new Ingest();
             ingest.processCommandLine(args);
