@@ -152,7 +152,7 @@ public class Ingest {
     private void sendEventToMessageBroker(final IngestEvent ingestEvent) throws Exception {
         Message message = MessageMaker.createMessage(
                 messageBroker.getSession(),
-                destinationEvent,
+                messageBroker.getSession().createQueue(destinationEvent),
                 UUID.randomUUID().toString(),
                 new Gson().toJson(ingestEvent));
 
@@ -160,9 +160,9 @@ public class Ingest {
     }
 
     private void sendXmlToMessageBroker(String correlationId, final String path, final String xml) throws Exception {
-        Message message = MessageMaker.createMessageWithSubject(
+        Message message = MessageMaker.createMessage(
                 messageBroker.getSession(),
-                destinationIngest,
+                messageBroker.getSession().createQueue(destinationIngest),
                 correlationId,
                 path,
                 xml);
