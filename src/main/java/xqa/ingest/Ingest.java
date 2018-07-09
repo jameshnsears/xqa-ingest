@@ -12,6 +12,7 @@ import xqa.commons.qpid.jms.MessageMaker;
 import javax.jms.Message;
 import java.io.File;
 import java.text.MessageFormat;
+import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -64,7 +65,12 @@ public class Ingest {
         int sentCounter = 0;
 
         XmlFileFinder xmlFileFinder = new XmlFileFinder(pathToXmlCandidateFiles);
-        for (File xmlFile : xmlFileFinder.findFiles()) {
+
+        Collection<File> xmlFiles = xmlFileFinder.findFiles();
+        logger.info(
+                MessageFormat.format("found {0} file(s) in {1}", xmlFiles.size(), pathToXmlCandidateFiles));
+
+        for (File xmlFile : xmlFiles) {
             try {
                 xmlFileFinder.checkFileCanBeUsed(xmlFile);
                 sentCounter += 1;

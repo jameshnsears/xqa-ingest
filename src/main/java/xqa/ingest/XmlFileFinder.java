@@ -37,9 +37,6 @@ public class XmlFileFinder {
         if (candidateXmlFiles.size() == 0)
             throw new XmlFileFinder.FinderException(XmlFileFinder.ERROR_NO_XML_FILES_FOUND);
 
-        logger.info(
-                MessageFormat.format("found {0} file(s) in {1}", candidateXmlFiles.size(), pathToXmlCandidateFiles));
-
         return candidateXmlFiles;
     }
 
