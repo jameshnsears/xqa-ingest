@@ -10,10 +10,10 @@
 * mvn package -DskipTests
 
 ### 1.2. Docker
-* docker-compose -p "dev" build --force-rm
+* docker-compose build --force-rm
 
 ## 2. Bring up
-* docker-compose -p "dev" up -d xqa-message-broker
+* docker-compose up -d xqa-message-broker
 
 ### 3. Test
 
@@ -30,4 +30,4 @@ or
 * docker run -d --net="dev_xqa" --name="dev_xqa-ingest_1" -v $HOME/GIT_REPOS/xqa-test-data:/xml jameshnsears/xqa-ingest:latest -message_broker_host xqa-message-broker -path /xml
 
 ## 4. Teardown
-* docker-compose -p "dev" down -v
+* docker-compose down -v

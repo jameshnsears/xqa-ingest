@@ -5,7 +5,6 @@ import org.apache.commons.cli.*;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.misc.Signal;
 import xqa.commons.qpid.jms.MessageBroker;
 import xqa.commons.qpid.jms.MessageMaker;
 
@@ -39,18 +38,17 @@ public class Ingest {
     }
 
     public static void main(String[] args) throws Exception {
-        Signal.handle(new Signal("INT"), signal -> System.exit(1));
         executeIngest(args);
     }
 
-    public static int executeIngest(String[] args) throws Exception {
+    public static int executeIngest(String[] args) {
         try {
             Ingest ingest = new Ingest();
             ingest.processCommandLine(args);
             return ingest.ingestFiles();
         } catch (Exception exception) {
             logger.error(exception.getMessage());
-            throw exception;
+            return 0;
         }
     }
 

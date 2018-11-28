@@ -4,6 +4,7 @@ services:
   xqa-ingest:
     build: .
     image: "xqa-ingest"
+    container_name: xqa-ingest
     command: ["-message_broker_host", "xqa-message-broker"]
     depends_on:
       - xqa-message-broker
@@ -12,6 +13,7 @@ services:
 
   xqa-message-broker:
     image: jameshnsears/xqa-message-broker:latest
+    container_name: xqa-message-broker
     ports:
       - "5672:5672"
       - "8161:8161"
