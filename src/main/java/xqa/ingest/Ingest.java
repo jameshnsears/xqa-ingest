@@ -41,11 +41,13 @@ public class Ingest {
         executeIngest(args);
     }
 
-    public static int executeIngest(String[] args) {
+    public static int executeIngest(String[] args) throws CommandLineException {
         try {
             Ingest ingest = new Ingest();
             ingest.processCommandLine(args);
             return ingest.ingestFiles();
+        } catch (Ingest.CommandLineException cliException) {
+            throw cliException;
         } catch (Exception exception) {
             logger.error(exception.getMessage());
             return 0;
