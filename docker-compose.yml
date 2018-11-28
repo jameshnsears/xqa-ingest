@@ -3,7 +3,7 @@ version: '3'
 services:
   xqa-ingest:
     build: .
-    image: "xqa-ingest"
+    image: xqa-ingest
     container_name: xqa-ingest
     command: ["-message_broker_host", "xqa-message-broker"]
     depends_on:
