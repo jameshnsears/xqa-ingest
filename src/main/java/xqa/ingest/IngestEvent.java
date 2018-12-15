@@ -11,12 +11,12 @@ class IngestEvent {
     private final int size;
     private final String state;
 
-    public IngestEvent(final String serviceId,
-                       final String correlationId,
-                       final String source,
-                       final String digest,
-                       final int size,
-                       final String state) {
+    IngestEvent(final String serviceId,
+                final String correlationId,
+                final String source,
+                final String digest,
+                final int size,
+                final String state) {
         this.serviceId = serviceId;
         this.creationTime = new Date().getTime();
         this.correlationId = correlationId;

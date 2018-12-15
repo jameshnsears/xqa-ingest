@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<FindBugsFilter>
+    <Class name="xqa.ingest.XmlFileFinder"/>
+    <And>
+        <Bug category="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+    </And>
+    <And>
+        <Bug category="RC_REF_COMPARISON_BAD_PRACTICE_BOOLEAN"/>
+    </And>
+    <And>
+        <Bug category="SIC_INNER_SHOULD_BE_STATIC"/>
+    </And>
+    <Class name="xqa.ingest.Ingest$CommandLineException"/>
+    <And>
+        <Bug category="SIC_INNER_SHOULD_BE_STATIC"/>
+    </And>
+    <Class name="xqa.ingest.XmlFileFinder$FinderException"/>
+    <And>
+        <Bug category="SIC_INNER_SHOULD_BE_STATIC"/>
+    </And>
+</FindBugsFilter>

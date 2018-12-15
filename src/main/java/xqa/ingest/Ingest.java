@@ -1,19 +1,27 @@
 package xqa.ingest;
 
-import com.google.gson.Gson;
-import org.apache.commons.cli.*;
-import org.apache.commons.codec.digest.DigestUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import xqa.commons.qpid.jms.MessageBroker;
-import xqa.commons.qpid.jms.MessageMaker;
-
-import javax.jms.Message;
 import java.io.File;
 import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
+
+import javax.jms.Message;
+
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.gson.Gson;
+
+import xqa.commons.qpid.jms.MessageBroker;
+import xqa.commons.qpid.jms.MessageMaker;
 
 public class Ingest {
     private static final Logger logger = LoggerFactory.getLogger(Ingest.class);

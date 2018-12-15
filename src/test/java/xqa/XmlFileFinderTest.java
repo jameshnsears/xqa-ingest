@@ -1,11 +1,8 @@
 package xqa;
 
-import org.apache.commons.io.FileUtils;
-import org.junit.Rule;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.migrationsupport.rules.EnableRuleMigrationSupport;
-import org.junit.rules.TemporaryFolder;
-import xqa.ingest.XmlFileFinder;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,7 +12,13 @@ import java.net.URL;
 import java.nio.file.Paths;
 import java.util.zip.GZIPInputStream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.apache.commons.io.FileUtils;
+import org.junit.Rule;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.migrationsupport.rules.EnableRuleMigrationSupport;
+import org.junit.rules.TemporaryFolder;
+
+import xqa.ingest.XmlFileFinder;
 
 @EnableRuleMigrationSupport
 public class XmlFileFinderTest {
