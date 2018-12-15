@@ -27,7 +27,7 @@
 
 or
 
-* docker run -d --net="dev_xqa" --name="dev_xqa-ingest_1" -v $HOME/GIT_REPOS/xqa-test-data:/xml jameshnsears/xqa-ingest:latest -message_broker_host xqa-message-broker -path /xml
+* docker run -d --net="xqa" --name="xqa-ingest_1" -v $HOME/GIT_REPOS/xqa-test-data:/xml jameshnsears/xqa-ingest:latest -message_broker_host xqa-message-broker -path /xml
 
 ## 4. Teardown
 * docker-compose down -v
