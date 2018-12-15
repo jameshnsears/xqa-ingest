@@ -4,13 +4,7 @@
 ![High Level Design](https://github.com/jameshnsears/xqa-documentation/blob/master/uml/ingest-balancer-sequence-diagram.jpg)
 
 ## 1. Build
-
-### 1.1. Maven
-* rm -rf $HOME/.m2/*
-* mvn package -DskipTests
-
-### 1.2. Docker
-* docker-compose build --force-rm
+* ./build.sh
 
 ## 2. Bring up
 * docker-compose up -d xqa-message-broker
@@ -27,7 +21,7 @@
 
 or
 
-* docker run -d --net="xqa" --name="xqa-ingest_1" -v $HOME/GIT_REPOS/xqa-test-data:/xml jameshnsears/xqa-ingest:latest -message_broker_host xqa-message-broker -path /xml
+* docker run -d --net="xqa" --name="xqa-ingest" -v $HOME/GIT_REPOS/xqa-test-data:/xml jameshnsears/xqa-ingest:latest -message_broker_host xqa-message-broker -path /xml
 
 ## 4. Teardown
 * docker-compose down -v
