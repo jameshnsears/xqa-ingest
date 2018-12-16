@@ -21,7 +21,7 @@ import org.junit.rules.TemporaryFolder;
 import xqa.ingest.XmlFileFinder;
 
 @EnableRuleMigrationSupport
-public class XmlFileFinderTest {
+class XmlFileFinderTest {
     @Rule
     public final TemporaryFolder temporaryFolder = new TemporaryFolder();
 

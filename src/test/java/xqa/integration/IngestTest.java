@@ -20,18 +20,12 @@ class IngestTest {
     @Test
     void ingestShowUsage() {
         assertThrows(Ingest.CommandLineException.class,
-                () -> {
-                    Ingest.main(new String[]{});
-                });
+                () -> Ingest.main(new String[]{}));
 
         assertThrows(Ingest.CommandLineException.class,
-                () -> {
-                    Ingest.main(new String[]{"-message_broker_host", "127.0.0.1"});
-                });
+                () -> Ingest.main(new String[]{"-message_broker_host", "127.0.0.1"}));
 
         assertThrows(Ingest.CommandLineException.class,
-                () -> {
-                    Ingest.main(new String[]{"-path", getResource()});
-                });
+                () -> Ingest.main(new String[]{"-path", getResource()}));
     }
 }

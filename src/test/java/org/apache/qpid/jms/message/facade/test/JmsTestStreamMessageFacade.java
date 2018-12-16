@@ -28,7 +28,7 @@ import org.apache.qpid.jms.message.facade.JmsStreamMessageFacade;
  */
 public class JmsTestStreamMessageFacade extends JmsTestMessageFacade implements JmsStreamMessageFacade {
 
-    private final List<Object> stream = new ArrayList<Object>();
+    private final List<Object> stream = new ArrayList<>();
     private int index = -1;
 
     @Override

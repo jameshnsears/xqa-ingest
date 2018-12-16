@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 
 public class XmlFileFinder {
     public static final String ERROR_NO_XML_FILES_FOUND = "no XML files found";
-    public static final String ERROR_FILE_MIMETYPE = "incorrect mimetype";
+    private static final String ERROR_FILE_MIMETYPE = "incorrect mimetype";
     public static final String ERROR_FILE_CONTENTS_NOT_WELL_FORMED = "file not well-formed";
 
     private static final Logger logger = LoggerFactory.getLogger(XmlFileFinder.class);

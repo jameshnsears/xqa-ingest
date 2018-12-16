@@ -1,16 +1,3 @@
-*.bak*
-/bin/
-.cache/
-.coverage
-coverage/
 .idea/*
 *.iml
-*.pyc
-__pycache__/
-.pydevproject
-tags
 /target/
-venv/
-.vscode/
-.xqa.vpp.*
-.pytest_cache/

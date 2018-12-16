@@ -28,7 +28,7 @@ import org.apache.qpid.jms.message.facade.JmsMapMessageFacade;
  */
 public class JmsTestMapMessageFacade extends JmsTestMessageFacade implements JmsMapMessageFacade {
 
-    protected final Map<String, Object> map = new HashMap<String, Object>();
+    private final Map<String, Object> map = new HashMap<>();
 
     @Override
     public JmsMsgType getMsgType() {

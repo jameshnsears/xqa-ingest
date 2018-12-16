@@ -32,7 +32,7 @@ import org.apache.qpid.jms.message.JmsTextMessage;
  * Implementation of the JmsMessageFactory that create simple
  * javax.jms.Message instances with test facades.
  */
-public class JmsTestMessageFactory implements JmsMessageFactory {
+class JmsTestMessageFactory implements JmsMessageFactory {
 
     @Override
     public JmsMessage createMessage() throws UnsupportedOperationException {

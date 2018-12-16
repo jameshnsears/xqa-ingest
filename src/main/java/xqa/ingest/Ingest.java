@@ -1,6 +1,7 @@
 package xqa.ingest;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.Optional;
@@ -40,7 +41,7 @@ public class Ingest {
 
     private String pathToXmlCandidateFiles;
 
-    public Ingest() {
+    private Ingest() {
         serviceId = this.getClass().getSimpleName().toLowerCase() + "/" + UUID.randomUUID().toString().split("-")[0];
         logger.info(serviceId);
     }
@@ -62,7 +63,7 @@ public class Ingest {
         }
     }
 
-    public int ingestFiles() throws Exception {
+    private int ingestFiles() throws Exception {
         messageBroker = new MessageBroker(
                 messageBrokerHost,
                 messageBrokerPort,
@@ -102,7 +103,7 @@ public class Ingest {
         String correlationId = UUID.randomUUID().toString();
         String xml = xmlFileFinder.contentsOfFile(xmlFile);
         String digest = DigestUtils.sha256Hex(xml);
-        int size = xml.getBytes("UTF-8").length;
+        int size = xml.getBytes(StandardCharsets.UTF_8).length;
 
         logger.info(MessageFormat.format("Y: {0}: correlationId={1}; digest={2}; size={3} - {4}",
                 String.format("%4d", sentCounter),
@@ -118,7 +119,7 @@ public class Ingest {
         sendEventToMessageBroker(new IngestEvent(serviceId, correlationId, xmlFile.getPath(), digest, size, "END"));
     }
 
-    public void processCommandLine(String[] args) throws ParseException, CommandLineException {
+    private void processCommandLine(String[] args) throws ParseException, CommandLineException {
         Options options = new Options();
 
         options.addOption("message_broker_host", true, "i.e. xqa-message-broker");

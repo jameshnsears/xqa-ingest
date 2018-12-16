@@ -35,22 +35,22 @@ import org.apache.qpid.jms.message.facade.JmsMessageFacade;
 public class JmsTestMessageFacade implements JmsMessageFacade {
 
     private static final Charset UTF8 = Charset.forName("UTF-8");
-    protected Map<String, Object> properties = new HashMap<String, Object>();
-    protected int priority = javax.jms.Message.DEFAULT_PRIORITY;
-    protected String groupId;
-    protected int groupSequence;
-    protected Object messageId;
-    protected long expiration;
-    protected long deliveryTime;
-    protected boolean deliveryTimeTransmitted;
-    protected long timestamp;
-    protected String correlationId;
-    protected boolean persistent = true;
-    protected int redeliveryCount;
-    protected String type;
-    protected JmsDestination destination;
-    protected JmsDestination replyTo;
-    protected String userId;
+    private Map<String, Object> properties = new HashMap<>();
+    private int priority = javax.jms.Message.DEFAULT_PRIORITY;
+    private String groupId;
+    private int groupSequence;
+    private Object messageId;
+    private long expiration;
+    private long deliveryTime;
+    private boolean deliveryTimeTransmitted;
+    private long timestamp;
+    private String correlationId;
+    private boolean persistent = true;
+    private int redeliveryCount;
+    private String type;
+    private JmsDestination destination;
+    private JmsDestination replyTo;
+    private String userId;
 
     public JmsMsgType getMsgType() {
         return JmsMsgType.MESSAGE;
@@ -63,7 +63,7 @@ public class JmsTestMessageFacade implements JmsMessageFacade {
         return copy;
     }
 
-    protected void copyInto(JmsTestMessageFacade target) {
+    void copyInto(JmsTestMessageFacade target) {
         target.priority = this.priority;
         target.groupSequence = this.groupSequence;
         target.groupId = this.groupId;
@@ -80,15 +80,15 @@ public class JmsTestMessageFacade implements JmsMessageFacade {
         target.messageId = this.messageId;
 
         if (this.properties != null) {
-            target.properties = new HashMap<String, Object>(this.properties);
+            target.properties = new HashMap<>(this.properties);
         } else {
             target.properties = null;
         }
     }
 
     @Override
-    public Set<String> getPropertyNames() throws JMSException {
-        Set<String> names = new HashSet<String>();
+    public Set<String> getPropertyNames() {
+        Set<String> names = new HashSet<>();
         if (properties != null) {
             names.addAll(properties.keySet());
         }
@@ -97,17 +97,17 @@ public class JmsTestMessageFacade implements JmsMessageFacade {
     }
 
     @Override
-    public boolean propertyExists(String key) throws JMSException {
+    public boolean propertyExists(String key) {
         return this.properties.containsKey(key);
     }
 
     @Override
-    public Object getProperty(String key) throws JMSException {
+    public Object getProperty(String key) {
         return this.properties.get(key);
     }
 
     @Override
-    public void setProperty(String key, Object value) throws JMSException {
+    public void setProperty(String key, Object value) {
         this.properties.put(key, value);
     }
 
@@ -116,7 +116,7 @@ public class JmsTestMessageFacade implements JmsMessageFacade {
     }
 
     @Override
-    public void onDispatch() throws JMSException {
+    public void onDispatch() {
     }
 
     @Override
@@ -313,7 +313,7 @@ public class JmsTestMessageFacade implements JmsMessageFacade {
     }
 
     @Override
-    public byte[] getUserIdBytes() throws JMSException {
+    public byte[] getUserIdBytes() {
         return userId != null ? userId.getBytes(Charset.forName("UTF-8")) : null;
     }
 
@@ -356,7 +356,7 @@ public class JmsTestMessageFacade implements JmsMessageFacade {
         return this;
     }
 
-    public static enum JmsMsgType {
+    public enum JmsMsgType {
         MESSAGE("jms/message"),
         BYTES("jms/bytes-message"),
         MAP("jms/map-message"),
@@ -366,7 +366,7 @@ public class JmsTestMessageFacade implements JmsMessageFacade {
         TEXT_NULL("jms/text-message-null");
 
         public final String buffer = new String(this.name());
-        public final String mime;
+        final String mime;
 
         JmsMsgType(String mime) {
             this.mime = mime;
