@@ -11,7 +11,7 @@
     <url>http://github.com/jameshnsears/xqa-ingest</url>
 
     <properties>
-        <java.version>11</java.version>
+        <java.version>10</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -57,7 +57,7 @@
         <dependency>
             <groupId>com.github.jameshnsears</groupId>
             <artifactId>xqa-commons-qpid-jms</artifactId>
-            <version>1.6</version>
+            <version>1.7</version>
         </dependency>
         <!--
         <dependency>

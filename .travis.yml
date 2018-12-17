@@ -15,7 +15,7 @@ services:
   - docker
 
 jdk:
-  - openjdk11
+  - openjdk10
 
 cache:
   directories:
