@@ -365,7 +365,7 @@ public class JmsTestMessageFacade implements JmsMessageFacade {
         TEXT("jms/text-message"),
         TEXT_NULL("jms/text-message-null");
 
-        public final String buffer = new String(this.name());
+        public final String buffer = this.name();
         final String mime;
 
         JmsMsgType(String mime) {

@@ -42,5 +42,5 @@ script:
 
 after_success:
   - mvn jacoco:report coveralls:report
-  - java -jar codacy-coverage-reporter-4.0.5-assembly report -l Java -r jacoco.xml
+  - java -jar codacy-coverage-reporter-4.0.5-assembly.jar report -l Java -r jacoco.xml
   - sonar-scanner

@@ -3,13 +3,13 @@ package xqa.ingest;
 import java.util.Date;
 
 class IngestEvent {
-    private final String serviceId;
-    private final long creationTime;
-    private final String correlationId;
-    private final String source;
-    private final String digest;
-    private final int size;
-    private final String state;
+    public final String serviceId;
+    public final long creationTime;
+    public final String correlationId;
+    public final String source;
+    public final String digest;
+    public final int size;
+    public final String state;
 
     IngestEvent(final String serviceId,
                 final String correlationId,

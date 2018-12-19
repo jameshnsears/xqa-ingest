@@ -25,7 +25,7 @@ import xqa.commons.qpid.jms.MessageBroker;
 import xqa.commons.qpid.jms.MessageMaker;
 
 public class Ingest {
-    private static final Logger logger = LoggerFactory.getLogger(Ingest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Ingest.class);
     private final String serviceId;
 
     private MessageBroker messageBroker;
@@ -43,7 +43,7 @@ public class Ingest {
 
     private Ingest() {
         serviceId = this.getClass().getSimpleName().toLowerCase() + "/" + UUID.randomUUID().toString().split("-")[0];
-        logger.info(serviceId);
+        LOGGER.info(serviceId);
     }
 
     public static void main(String[] args) throws Exception {
@@ -58,7 +58,7 @@ public class Ingest {
         } catch (Ingest.CommandLineException cliException) {
             throw cliException;
         } catch (Exception exception) {
-            logger.error(exception.getMessage());
+            LOGGER.error(exception.getMessage());
             return 0;
         }
     }
@@ -76,7 +76,7 @@ public class Ingest {
         XmlFileFinder xmlFileFinder = new XmlFileFinder(pathToXmlCandidateFiles);
 
         Collection<File> xmlFiles = xmlFileFinder.findFiles();
-        logger.info(
+        LOGGER.info(
                 MessageFormat.format("found {0} file(s) in {1}", xmlFiles.size(), pathToXmlCandidateFiles));
 
         for (File xmlFile : xmlFiles) {
@@ -87,13 +87,13 @@ public class Ingest {
                 sendXmlFileToMessageBroker(sentCounter, xmlFileFinder, xmlFile);
 
             } catch (XmlFileFinder.FinderException finderException) {
-                logger.debug(finderException.getMessage());
+                LOGGER.debug(finderException.getMessage());
             }
         }
 
         messageBroker.close();
 
-        logger.info(MessageFormat.format("FINISHED - sent: {0}/{1}",
+        LOGGER.info(MessageFormat.format("FINISHED - sent: {0}/{1}",
                 sentCounter, Optional.of(xmlFileFinder.findFiles().size()).orElse(0)));
 
         return sentCounter;
@@ -105,7 +105,7 @@ public class Ingest {
         String digest = DigestUtils.sha256Hex(xml);
         int size = xml.getBytes(StandardCharsets.UTF_8).length;
 
-        logger.info(MessageFormat.format("Y: {0}: correlationId={1}; digest={2}; size={3} - {4}",
+        LOGGER.info(MessageFormat.format("Y: {0}: correlationId={1}; digest={2}; size={3} - {4}",
                 String.format("%4d", sentCounter),
                 correlationId,
                 digest,
@@ -140,7 +140,7 @@ public class Ingest {
     private void setConfigurationValues(Options options, CommandLine commandLine) throws CommandLineException {
         if (commandLine.hasOption("message_broker_host")) {
             messageBrokerHost = commandLine.getOptionValue("message_broker_host");
-            logger.info("message_broker_host=" + messageBrokerHost);
+            LOGGER.info("message_broker_host=" + messageBrokerHost);
         } else {
             showUsage(options);
         }
@@ -155,7 +155,7 @@ public class Ingest {
 
         if (commandLine.hasOption("path")) {
             pathToXmlCandidateFiles = commandLine.getOptionValue("path");
-            logger.info("path=" + pathToXmlCandidateFiles);
+            LOGGER.info("path=" + pathToXmlCandidateFiles);
         } else {
             showUsage(options);
         }
