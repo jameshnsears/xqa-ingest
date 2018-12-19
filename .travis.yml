@@ -5,6 +5,13 @@ sudo: required
 notifications:
 email: james.hn.sears@gmail.com
 
+env:
+  global:
+    # travis encrypt COVERALLS_REPO_TOKEN=...
+    - secure: "nrYFU0nyktocm4mVLN70QKUv9JecQW6U8ueu8Al9GS+OcSXoJ/BiPRYlboTbHzdwOnz58cmv6oOYmvOtKqNKwTI6ocNzGHCJO0wPWJO3+biqHQ+T6qnqv5g7eiSuQtNtMi9etzc7DWLBQkhzgZpIOBIn3v5yrMVPmQWLHwwLbbzBQrIxUendYV7mTN5ZakOP4CXznMgHAIAt8F72Mo06JZUKnKgdwm3TWC2WYUhdtvJwmGvy/PXp74MKKg6t9xQfZXDdcm9iXRt1K6FAoCvEmNT19YO6KpjGGs4RTiUNDWEAcixA1ljeigb3pB4C5t1T8KcKrhMn+xey52ApfXidNIJH9DIrmd5DOxYadU+qtrE1h9blIX1crN56KXFf/YJZ/vfKYQtORPgq9UeDUlfnYeN1LzcmfFdhNd6h/epcspEk+r/l9q8f1kjhAlsmLHpEuoKSCicPOqiR2X19pYX9n4wQ+d41u5iopK27/7xD3n/SWmX9w6YTp/V0pNzNgEkqPW+Z0g5ZUQZHRq8OieJPIjhCFRb2RhPBkbp8fdARCIkoHX6n+Nn1Dt/J1ujfYVqp9bWkZwLuKRt3hBAopGdOxh/CVpJxa183Iq7zJCq8pjbho6+aeNQ5bt0d8tIWy0GvhJSmGPqXaRgcrAgm+aZ489IdlrmrGumRa5Wbq8UViyk="
+    # travis encrypt CODACY_PROJECT_TOKEN=...
+    - secure: "IWJSX9vSwXsYuCDt2MIsV6aaM06Wa7MJV9vXdV1jz8ffW3LWUciGK9eLHwuN9wULWYF+06H42RkEUlOvJ5/3Uked6FivNOs2nXEhMpV4Q53lUQah64L1fv4ZhIgqvjtyMVsKojwuu8sV/SuajA7zAs6wRSfb17SsgN5QhIjXBMxFQ7BYwd5WVgKiuJNx0i7DTviDaNvEJ2QL22CjpP7nHNJMzqqeHUOVdFS+cVhOM1JtAu7mZZ79G1oS4IbrRWWJ5mxI5swaOzLXQek5H3KmPBKc2EsY0L6fz3bFvdyj4RJZGmlJ8+r+R7cMlPGOOpDXQk7htbTdSiz435pI9vg3Az3vCmTKCWWwRBWw6fyd0TZSTlGs7xFpb6K+BcZmZmPCCvC2hS4NKmDGW8TxdTrGPTTgUQhnh42BTv6cZzt7VJfxY/RQNu5ufZtpQwOIDU7JT8W6ujxLQFxBqz2Bu31w4FzClj0lBX6LgBRNn1f0GZggNvjUT3YmzdcltKFKNpsWe4bAjyeXnwhFt3jgPhfxfsO+aiDWBXk2LZUWISKfxRI5TeGxyjvkWTWrzURmdSWv7meIwrk+iPQL9A9aoGT4eKvAtyDpzA7kGINdyX3zN3/EN7vNf0eeozgXPSI8b9ytLzCddYXlqfqafxqqSXmFossSP6qLBu4Md31LhwQO4u4="
+
 addons:
   sonarcloud:
     organization: "jameshnsears-github"
@@ -27,6 +34,7 @@ cache:
 
 before_script:
   - docker-compose up -d xqa-message-broker
+  - wget https://github.com/codacy/codacy-coverage-reporter/releases/download/4.0.5/codacy-coverage-reporter-4.0.5-assembly.jar
 
 script:
   - mvn clean test
@@ -34,4 +42,5 @@ script:
 
 after_success:
   - mvn jacoco:report coveralls:report
+  - java -jar codacy-coverage-reporter-4.0.5-assembly report -l Java -r jacoco.xml
   - sonar-scanner

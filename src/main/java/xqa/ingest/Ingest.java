@@ -190,7 +190,5 @@ public class Ingest {
 
     @SuppressWarnings("serial")
     public class CommandLineException extends Exception {
-        public CommandLineException() {
-        }
     }
 }
