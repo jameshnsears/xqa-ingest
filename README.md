@@ -12,9 +12,7 @@
 ### 3. Test
 
 ### 3.1. Maven
-* mvn clean compile test
-* mvn jacoco:report coveralls:report
-* mvn site  # findbugs
+* see .travis.yml
 
 ### 3.2. CLI
 * java -jar target/xqa-ingest-1.0.0-SNAPSHOT-jar-with-dependencies.jar -message_broker_host 127.0.0.1 -path $HOME/GIT_REPOS/xqa-test-data
