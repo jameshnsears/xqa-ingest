@@ -55,8 +55,6 @@ public class Ingest {
             Ingest ingest = new Ingest();
             ingest.processCommandLine(args);
             return ingest.ingestFiles();
-        } catch (Ingest.CommandLineException cliException) {
-            throw cliException;
         } catch (Exception exception) {
             LOGGER.error(exception.getMessage());
             return 0;
